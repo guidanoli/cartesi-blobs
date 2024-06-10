@@ -1,0 +1,9 @@
+artifacts
+cache
+deployments
+dist
+export
+src/types
+out
+lib
+forge-cache

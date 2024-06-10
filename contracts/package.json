@@ -1,0 +1,35 @@
+{
+    "name": "@guidanoli/cartesi-blobs-contracts",
+    "version": "0.0.0",
+    "description": "Smart contracts for integrating Cartesi Rollups with EIP-4844 \"blobs\"",
+    "keywords": [
+        "cartesi",
+        "rollups",
+        "solidity",
+        "eip-4844",
+        "blobs"
+    ],
+    "homepage": "https://github.com/guidanoli/cartesi-blobs",
+    "bugs": {
+        "url": "https://github.com/guidanoli/cartesi-blobs/issues"
+    },
+    "license": "GPL-v3-only",
+    "author": {
+        "name": "Guilherme Dantas",
+        "e-mail": "guidanoli@proton.me",
+        "url": "https://github.com/guidanoli"
+    },
+    "files": [
+        "src/*.sol"
+    ],
+    "scripts": {
+        "format": "prettier --check . --write"
+    },
+    "dependencies": {
+        "@cartesi/rollups": "1.4.0"
+    },
+    "devDependencies": {
+        "prettier": "^3.3.1",
+        "prettier-plugin-solidity": "^1.3.1"
+    }
+}
