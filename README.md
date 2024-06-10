@@ -10,14 +10,18 @@ During disputes, the response could be proved through the KZG commitments and pr
 
 ## References
 
-### On EIP-4844
+### EIP-4844
 
 - [EIP-4844 spec](https://eips.ethereum.org/EIPS/eip-4844)
 - [EIP-4844 website](https://www.eip4844.com/)
 - [EIP-4844 L2 TX usage & blob lifetime](https://hackmd.io/@protolambda/blobs_l2_tx_usage)
 - [EIP-4844 dev usage](https://github.com/colinlyguo/EIP-4844-dev-usage)
 
-### Services
+### Sending blob transactions
+
+- [Viem](https://viem.sh/docs/guides/blob-transactions)
+
+### Querying blobs
 
 - [Blobscan (Sepolia)](https://sepolia.blobscan.com/)
 - [Blobscan API (Sepolia)](https://api.sepolia.blobscan.com/)
