@@ -1,5 +1,8 @@
+# Local deployments
+/deployments/localhost/
+
 # Node dependencies
-node_modules/
+/node_modules/
 
 # Compiler files
 cache/
