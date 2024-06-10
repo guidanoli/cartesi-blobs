@@ -7,3 +7,10 @@ During the execution of contract code, the versioned hashes of these blobs can b
 
 This project aims to create a contract whose sole job is to send to some application an input whose payload contains the versioned hashes of all the blobs included in the transaction. Inside the machine, these hashes can be converted to their pre-images through a Generic I/O request. We believe a demo version of this "driver" can be bootstrapped using NoNodo.
 During disputes, the response could be proved through the KZG commitments and proofs that are included in the transaction, which can be much shorter than the blobs themselves, and be passed as `calldata` to a `MerkleProvider` contract. This part is being left out of the scope of this project intentionally, and left as future work.
+
+## References
+
+- [EIP-4844 spec](https://eips.ethereum.org/EIPS/eip-4844)
+- [EIP-4844 website](https://www.eip4844.com/)
+- [EIP-4844 L2 TX usage & blob lifetime](https://hackmd.io/@protolambda/blobs_l2_tx_usage)
+- [EIP-4844 dev usage](https://github.com/colinlyguo/EIP-4844-dev-usage)
