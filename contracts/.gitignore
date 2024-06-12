@@ -1,3 +1,6 @@
+# Javascript files
+/dist/
+
 # Typechain files
 /src/types/
 
