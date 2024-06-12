@@ -8,6 +8,38 @@ During the execution of contract code, the versioned hashes of these blobs can b
 This project aims to create a contract whose sole job is to send to some application an input whose payload contains the versioned hashes of all the blobs included in the transaction. Inside the machine, these hashes can be converted to their pre-images through a Generic I/O request. We believe a demo version of this "driver" can be bootstrapped using NoNodo.
 During disputes, the response could be proved through the KZG commitments and proofs that are included in the transaction, which can be much shorter than the blobs themselves, and be passed as `calldata` to a `MerkleProvider` contract. This part is being left out of the scope of this project intentionally, and left as future work.
 
+## User pipeline
+
+```mermaid
+flowchart TB
+
+    subgraph Ethereum
+        VersionedBlobHashRelay
+        InputBox
+    end
+
+    subgraph User Browser
+        AppFrontend[App Front-end]
+        Wallet["Wallet (e.g. Metamask 🦊)"]
+    end
+
+    CartesiNode[Cartesi Node]
+
+    subgraph Cartesi Machine
+        rxBuffer[rx buffer]
+        HTTPAPI[HTTP API]
+        AppBackend[App Back-end]
+    end
+
+    AppFrontend -- suggests tx w/ blob(s) --> Wallet
+    Wallet -- submits tx w/ blob(s) --> VersionedBlobHashRelay
+    VersionedBlobHashRelay -- adds input w/ blob hash(es) --> InputBox
+    InputBox -- reads input from event --> CartesiNode
+    CartesiNode -- writes input to --> rxBuffer
+    rxBuffer -- provides input to --> HTTPAPI
+    HTTPAPI -- serves decoded input to --> AppBackend
+```
+
 ## References
 
 ### EIP-4844
