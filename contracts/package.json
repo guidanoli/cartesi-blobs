@@ -20,7 +20,12 @@
         "url": "https://github.com/guidanoli"
     },
     "files": [
-        "src/*.sol"
+        "deployments/*/*.json",
+        "deployments/*/.chainid",
+        "dist/src",
+        "dist/deploy/*.js",
+        "export",
+        "src"
     ],
     "scripts": {
         "build": "run-s compile export",
