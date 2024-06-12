@@ -3,12 +3,12 @@
 pragma solidity ^0.8.24;
 
 import {IInputBox} from "@cartesi/rollups/contracts/inputs/IInputBox.sol";
-import {InputRelay} from "@cartesi/rollups/contracts/inputs/InputRelay.sol";
+import {Portal} from "@cartesi/rollups/contracts/portals/Portal.sol";
 
-contract VersionedBlobHashRelay is InputRelay {
+contract VersionedBlobHashRelay is Portal {
     /// @notice Constructs the portal.
     /// @param inputBox The input box used by the portal
-    constructor(IInputBox inputBox) InputRelay(inputBox) {}
+    constructor(IInputBox inputBox) Portal(inputBox) {}
 
     /// @notice Adds an input with the versioned hashes of all the
     /// blobs contained in the current transaction, obtained via the
@@ -27,6 +27,6 @@ contract VersionedBlobHashRelay is InputRelay {
             input = abi.encodePacked(input, versionedBlobHash);
         }
 
-        inputBox.addInput(appContract, input);
+        _inputBox.addInput(appContract, input);
     }
 }
