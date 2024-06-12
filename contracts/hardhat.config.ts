@@ -71,6 +71,7 @@ const config: HardhatUserConfig = {
         artifacts: "artifacts",
         deploy: "deploy",
         deployments: "deployments",
+        sources: "src",
     },
     deterministicDeployment: (network: string) => {
         // networks will use another deterministic deployment proxy
