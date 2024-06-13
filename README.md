@@ -144,6 +144,34 @@ flowchart TB
     HTTPAPI -- (8) blob --> AppBackend
 ```
 
+## Running NoNodo
+
+Because the reference implementation of the Cartesi node for the Rollups SDK v2 is not ready yet, we've decided to hack NoNodo instead.
+You can see the changes made to the NoNodo codebase in the [`feature/eip-4844`](https://github.com/Calindra/nonodo/tree/feature/eip-4844) branch.
+
+```sh
+git clone https://github.com/Calindra/nonodo.git
+cd nonodo
+git checkout feature/eip-4844
+go mod install
+go build
+```
+
+We've deployed all the necessary contracts to the Ethereum Sepolia test network, so you can test out the project there.
+Here's how you're able to run NoNodo while listening to inputs from the `InputBox` contract deployed to Sepolia.
+Make sure you set the `RPC_URL` environment variable appropriately (you can use any service provider, like Alchemy or Infura).
+Just make sure to use WebSocket, because HTTP doesn't support notifications (required for `eth_subscribe`).
+For testing purposes, you can set the `APPLICATION_CONTRACT` environment variable to a dummy address.
+
+```sh
+./nonodo \
+    --enable-echo \
+    --contracts-application-address "$APPLICATION_CONTRACT" \
+    --contracts-input-box-address 0x58Df21fE097d4bE5dCf61e01d9ea3f6B81c2E1dB \
+    --contracts-input-box-block 6099597 \
+    --rpc-url "$RPC_URL"
+```
+
 ## References
 
 ### EIP-4844
