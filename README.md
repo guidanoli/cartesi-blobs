@@ -161,12 +161,9 @@ We've deployed all the necessary contracts to the Ethereum Sepolia test network,
 Here's how you're able to run NoNodo while listening to inputs from the `InputBox` contract deployed to Sepolia.
 Make sure you set the `RPC_URL` environment variable appropriately (you can use any service provider, like Alchemy or Infura).
 Just make sure to use WebSocket, because HTTP doesn't support notifications (required for `eth_subscribe`).
-For testing purposes, you can set the `APPLICATION_CONTRACT` environment variable to a dummy address.
 
 ```sh
 ./nonodo \
-    --enable-echo \
-    --contracts-application-address "$APPLICATION_CONTRACT" \
     --contracts-input-box-address 0x58Df21fE097d4bE5dCf61e01d9ea3f6B81c2E1dB \
     --contracts-input-box-block 6099597 \
     --rpc-url "$RPC_URL"
