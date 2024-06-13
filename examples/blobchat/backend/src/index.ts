@@ -1,6 +1,6 @@
 import createClient from "openapi-fetch";
 import { components, paths } from "./schema";
-import { Address } from "viem";
+import { Address, Hex, slice, size } from "viem";
 
 type AdvanceRequestData = components["schemas"]["Advance"];
 type InspectRequestData = components["schemas"]["Inspect"];
@@ -17,7 +17,35 @@ const VERSIONED_BLOB_HASH_PORTAL: Address =
 const rollupServer = process.env.ROLLUP_HTTP_SERVER_URL;
 console.log("HTTP rollup_server url is " + rollupServer);
 
+// Uses continuation-passing style
+const split = <T>(hex: Hex, at: number, k: (before: Hex, after: Hex) => T): T => {
+    return k(slice(hex, 0, at), slice(hex, at));
+}
+
+const handleAdvanceFromVersionedBlobHashPortal: AdvanceRequestHandler = async ({ payload }) => {
+    const [sender, versionedBlobHashes] = split(payload, 20, (sender, payload) => {
+        const versionedBlobHashes: Hex[] = [];
+        while (size(payload) > 0) {
+            payload = split(payload, 32, (versionedBlobHash, payload) => {
+                versionedBlobHashes.push(versionedBlobHash);
+                return payload;
+            });
+        }
+        return [sender, versionedBlobHashes];
+    });
+    console.log(`Received ${versionedBlobHashes.length} blobs from ${sender}:`);
+    versionedBlobHashes.forEach((versionedblobHash, i) => {
+        console.log();
+        console.log(`Blob at index ${i}:`)
+        console.log(versionedblobHash);
+    });
+    return "accept";
+}
+
 const handleAdvance: AdvanceRequestHandler = async (data) => {
+    if (data.metadata.msg_sender == VERSIONED_BLOB_HASH_PORTAL) {
+        return handleAdvanceFromVersionedBlobHashPortal(data);
+    }
     console.log("Received advance request data " + JSON.stringify(data));
     return "accept";
 };
