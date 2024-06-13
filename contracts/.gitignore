@@ -11,6 +11,9 @@
 # Local deployments
 /deployments/localhost/
 
+# Solc inputs
+/deployments/*/solcInputs/*.json
+
 # Node dependencies
 /node_modules/
 

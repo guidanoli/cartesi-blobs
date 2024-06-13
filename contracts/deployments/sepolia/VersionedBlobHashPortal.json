@@ -1,0 +1,113 @@
+{
+  "address": "0x03CBe3B3A870CCFBDb810DC790C1634037b8Cb82",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract IInputBox",
+          "name": "inputBox",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "getInputBox",
+      "outputs": [
+        {
+          "internalType": "contract IInputBox",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "appContract",
+          "type": "address"
+        }
+      ],
+      "name": "sendVersionedBlobHashes",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "args": [
+    "0x58Df21fE097d4bE5dCf61e01d9ea3f6B81c2E1dB"
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "59055bee70320b413fd2a802404c1af9",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.24+commit.e11b9ed9\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract IInputBox\",\"name\":\"inputBox\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"getInputBox\",\"outputs\":[{\"internalType\":\"contract IInputBox\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"}],\"name\":\"sendVersionedBlobHashes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"constructor\":{\"params\":{\"inputBox\":\"The input box used by the portal\"}},\"getInputBox()\":{\"returns\":{\"_0\":\"The input box\"}},\"sendVersionedBlobHashes(address)\":{\"details\":\"The input format is the following: message sender address (20 bytes), followed by `n` versioned blob hashes (32 bytes each), in the same order as they appear in the transaction.\",\"params\":{\"appContract\":\"The application contract address\"}},\"supportsInterface(bytes4)\":{\"details\":\"Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"constructor\":{\"notice\":\"Constructs the portal.\"},\"getInputBox()\":{\"notice\":\"Get the input box used by this portal.\"},\"sendVersionedBlobHashes(address)\":{\"notice\":\"Adds an input with the versioned hashes of all the blobs contained in the current transaction, obtained via the `BLOBHASH` opcode (introduced by EIP-4844).\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/VersionedBlobHashPortal.sol\":\"VersionedBlobHashPortal\"},\"evmVersion\":\"cancun\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@cartesi/rollups/contracts/inputs/IInputBox.sol\":{\"content\":\"// (c) Cartesi and individual authors (see AUTHORS)\\n// SPDX-License-Identifier: Apache-2.0 (see LICENSE)\\n\\npragma solidity ^0.8.8;\\n\\n/// @notice Provides data availability of inputs for applications.\\n/// @notice Each application has its own append-only list of inputs.\\n/// @notice Off-chain, inputs can be retrieved via events.\\n/// @notice On-chain, only the input hashes are stored.\\n/// @notice See `LibInput` for more details on how such hashes are computed.\\ninterface IInputBox {\\n    /// @notice MUST trigger when an input is added.\\n    /// @param appContract The application contract address\\n    /// @param index The input index\\n    /// @param input The input blob\\n    event InputAdded(\\n        address indexed appContract,\\n        uint256 indexed index,\\n        bytes input\\n    );\\n\\n    /// @notice Input is too large.\\n    /// @param appContract The application contract address\\n    /// @param inputLength The input length\\n    /// @param maxInputLength The maximum input length\\n    error InputTooLarge(\\n        address appContract,\\n        uint256 inputLength,\\n        uint256 maxInputLength\\n    );\\n\\n    /// @notice Send an input to an application.\\n    /// @param appContract The application contract address\\n    /// @param payload The input payload\\n    /// @return The hash of the input blob\\n    /// @dev MUST fire an `InputAdded` event.\\n    function addInput(\\n        address appContract,\\n        bytes calldata payload\\n    ) external returns (bytes32);\\n\\n    /// @notice Get the number of inputs sent to an application.\\n    /// @param appContract The application contract address\\n    function getNumberOfInputs(\\n        address appContract\\n    ) external view returns (uint256);\\n\\n    /// @notice Get the hash of an input in an application's input box.\\n    /// @param appContract The application contract address\\n    /// @param index The input index\\n    /// @dev The provided index must be valid.\\n    function getInputHash(\\n        address appContract,\\n        uint256 index\\n    ) external view returns (bytes32);\\n}\\n\",\"keccak256\":\"0xae7730cd7ab2b31a86d7c4933215853ea6c0b1b4dc60d4ec24e5cfc2ec005fe3\",\"license\":\"Apache-2.0 (see LICENSE)\"},\"@cartesi/rollups/contracts/portals/IPortal.sol\":{\"content\":\"// (c) Cartesi and individual authors (see AUTHORS)\\n// SPDX-License-Identifier: Apache-2.0 (see LICENSE)\\n\\npragma solidity ^0.8.8;\\n\\nimport {IInputBox} from \\\"../inputs/IInputBox.sol\\\";\\nimport {IERC165} from \\\"@openzeppelin/contracts/utils/introspection/IERC165.sol\\\";\\n\\n/// @title Portal interface\\ninterface IPortal is IERC165 {\\n    // Permissionless functions\\n\\n    /// @notice Get the input box used by this portal.\\n    /// @return The input box\\n    function getInputBox() external view returns (IInputBox);\\n}\\n\",\"keccak256\":\"0xbc364030939ea4a214e2f3673eaca1c500fcfd4929239a3b5d804ffc5687ed37\",\"license\":\"Apache-2.0 (see LICENSE)\"},\"@cartesi/rollups/contracts/portals/Portal.sol\":{\"content\":\"// (c) Cartesi and individual authors (see AUTHORS)\\n// SPDX-License-Identifier: Apache-2.0 (see LICENSE)\\n\\npragma solidity ^0.8.8;\\n\\nimport {IPortal} from \\\"./IPortal.sol\\\";\\nimport {IInputBox} from \\\"../inputs/IInputBox.sol\\\";\\nimport {ERC165, IERC165} from \\\"@openzeppelin/contracts/utils/introspection/ERC165.sol\\\";\\n\\n/// @title Portal\\n/// @notice This contract serves as a base for all the other portals.\\ncontract Portal is IPortal, ERC165 {\\n    /// @notice The input box used by the portal.\\n    IInputBox internal immutable _inputBox;\\n\\n    /// @notice Constructs the portal.\\n    /// @param inputBox The input box used by the portal\\n    constructor(IInputBox inputBox) {\\n        _inputBox = inputBox;\\n    }\\n\\n    function getInputBox() external view override returns (IInputBox) {\\n        return _inputBox;\\n    }\\n\\n    function supportsInterface(\\n        bytes4 interfaceId\\n    ) public view virtual override(ERC165, IERC165) returns (bool) {\\n        return\\n            interfaceId == type(IPortal).interfaceId ||\\n            super.supportsInterface(interfaceId);\\n    }\\n}\\n\",\"keccak256\":\"0x0cd3da30a41e1085163195b99526cedced7665c89d291d287500d53e5160e5dc\",\"license\":\"Apache-2.0 (see LICENSE)\"},\"@openzeppelin/contracts/utils/introspection/ERC165.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.0) (utils/introspection/ERC165.sol)\\n\\npragma solidity ^0.8.20;\\n\\nimport {IERC165} from \\\"./IERC165.sol\\\";\\n\\n/**\\n * @dev Implementation of the {IERC165} interface.\\n *\\n * Contracts that want to implement ERC165 should inherit from this contract and override {supportsInterface} to check\\n * for the additional interface id that will be supported. For example:\\n *\\n * ```solidity\\n * function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {\\n *     return interfaceId == type(MyInterface).interfaceId || super.supportsInterface(interfaceId);\\n * }\\n * ```\\n */\\nabstract contract ERC165 is IERC165 {\\n    /**\\n     * @dev See {IERC165-supportsInterface}.\\n     */\\n    function supportsInterface(bytes4 interfaceId) public view virtual returns (bool) {\\n        return interfaceId == type(IERC165).interfaceId;\\n    }\\n}\\n\",\"keccak256\":\"0x9e8778b14317ba9e256c30a76fd6c32b960af621987f56069e1e819c77c6a133\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/introspection/IERC165.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.0) (utils/introspection/IERC165.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Interface of the ERC165 standard, as defined in the\\n * https://eips.ethereum.org/EIPS/eip-165[EIP].\\n *\\n * Implementers can declare support of contract interfaces, which can then be\\n * queried by others ({ERC165Checker}).\\n *\\n * For an implementation, see {ERC165}.\\n */\\ninterface IERC165 {\\n    /**\\n     * @dev Returns true if this contract implements the interface defined by\\n     * `interfaceId`. See the corresponding\\n     * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section]\\n     * to learn more about how these ids are created.\\n     *\\n     * This function call must use less than 30 000 gas.\\n     */\\n    function supportsInterface(bytes4 interfaceId) external view returns (bool);\\n}\\n\",\"keccak256\":\"0x4296879f55019b23e135000eb36896057e7101fb7fb859c5ef690cf14643757b\",\"license\":\"MIT\"},\"src/IVersionedBlobHashPortal.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\n\\npragma solidity ^0.8.24;\\n\\nimport {IPortal} from \\\"@cartesi/rollups/contracts/portals/IPortal.sol\\\";\\n\\n/// @title Versioned Blob Hash Portal interface\\ninterface IVersionedBlobHashPortal is IPortal {\\n    // Permissionless functions\\n\\n    /// @notice Adds an input with the versioned hashes of all the\\n    /// blobs contained in the current transaction, obtained via the\\n    /// `BLOBHASH` opcode (introduced by EIP-4844).\\n    ///\\n    /// @param appContract The application contract address\\n    ///\\n    /// @dev The input format is the following:\\n    /// message sender address (20 bytes),\\n    /// followed by `n` versioned blob hashes (32 bytes each),\\n    /// in the same order as they appear in the transaction.\\n    function sendVersionedBlobHashes(address appContract) external;\\n}\\n\",\"keccak256\":\"0x3c35fda6ba7f4fc2bd2a6012a30e76a34781487aa05f8e0f0e19f324f096a9f9\",\"license\":\"GPL-3.0\"},\"src/VersionedBlobHashPortal.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\n\\npragma solidity ^0.8.24;\\n\\nimport {IERC165} from \\\"@openzeppelin/contracts/utils/introspection/IERC165.sol\\\";\\n\\nimport {IInputBox} from \\\"@cartesi/rollups/contracts/inputs/IInputBox.sol\\\";\\nimport {Portal} from \\\"@cartesi/rollups/contracts/portals/Portal.sol\\\";\\n\\nimport {IVersionedBlobHashPortal} from \\\"./IVersionedBlobHashPortal.sol\\\";\\n\\ncontract VersionedBlobHashPortal is IVersionedBlobHashPortal, Portal {\\n    /// @notice Constructs the portal.\\n    /// @param inputBox The input box used by the portal\\n    constructor(IInputBox inputBox) Portal(inputBox) {}\\n\\n    /// @inheritdoc IVersionedBlobHashPortal\\n    function sendVersionedBlobHashes(address appContract) external {\\n        bytes memory input = abi.encodePacked(msg.sender);\\n\\n        for (uint256 i; ; ++i) {\\n            bytes32 versionedBlobHash = blobhash(i);\\n            if (versionedBlobHash == bytes32(0)) break;\\n            input = abi.encodePacked(input, versionedBlobHash);\\n        }\\n\\n        _inputBox.addInput(appContract, input);\\n    }\\n\\n    /// @inheritdoc IERC165\\n    function supportsInterface(\\n        bytes4 interfaceId\\n    ) public view virtual override(IERC165, Portal) returns (bool) {\\n        return\\n            interfaceId == type(IVersionedBlobHashPortal).interfaceId ||\\n            super.supportsInterface(interfaceId);\\n    }\\n}\\n\",\"keccak256\":\"0xc8e67223d540aa3f07a2c611b894193db3daed106c792fe00ccf5669e8b3451d\",\"license\":\"GPL-3.0\"}},\"version\":1}",
+  "bytecode": "0x60a060405234801561000f575f80fd5b506040516103ed3803806103ed83398101604081905261002e9161003f565b6001600160a01b031660805261006c565b5f6020828403121561004f575f80fd5b81516001600160a01b0381168114610065575f80fd5b9392505050565b60805161036361008a5f395f8181604f015261016b01526103635ff3fe608060405234801561000f575f80fd5b506004361061003e575f3560e01c8062aace9a1461004257806301ffc9a71461007e5780632dad59a2146100a1575b5f80fd5b6040516001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001681526020015b60405180910390f35b61009161008c36600461021a565b6100b6565b6040519015158152602001610075565b6100b46100af366004610248565b6100e0565b005b5f6001600160e01b031982166316d6acd160e11b14806100da57506100da826101e7565b92915050565b604080513360601b6bffffffffffffffffffffffff191660208201528151601481830301815260349091019091525f5b80498061011d5750610153565b8281604051602001610130929190610290565b6040516020818303038152906040529250508061014c906102b1565b9050610110565b50604051631789cd6360e01b81526001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001690631789cd63906101a290859085906004016102d5565b6020604051808303815f875af11580156101be573d5f803e3d5ffd5b505050506040513d601f19601f820116820180604052508101906101e29190610316565b505050565b5f6001600160e01b031982166255674d60e11b14806100da57506301ffc9a760e01b6001600160e01b03198316146100da565b5f6020828403121561022a575f80fd5b81356001600160e01b031981168114610241575f80fd5b9392505050565b5f60208284031215610258575f80fd5b81356001600160a01b0381168114610241575f80fd5b5f5b83811015610288578181015183820152602001610270565b50505f910152565b5f83516102a181846020880161026e565b9190910191825250602001919050565b5f600182016102ce57634e487b7160e01b5f52601160045260245ffd5b5060010190565b60018060a01b0383168152604060208201525f825180604084015261030181606085016020870161026e565b601f01601f1916919091016060019392505050565b5f60208284031215610326575f80fd5b505191905056fea26469706673582212202d7a812279500d5b11cfc987766df70eb42b1c15ccb20425f20b81e0e23dc34e64736f6c63430008180033",
+  "deployedBytecode": "0x608060405234801561000f575f80fd5b506004361061003e575f3560e01c8062aace9a1461004257806301ffc9a71461007e5780632dad59a2146100a1575b5f80fd5b6040516001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001681526020015b60405180910390f35b61009161008c36600461021a565b6100b6565b6040519015158152602001610075565b6100b46100af366004610248565b6100e0565b005b5f6001600160e01b031982166316d6acd160e11b14806100da57506100da826101e7565b92915050565b604080513360601b6bffffffffffffffffffffffff191660208201528151601481830301815260349091019091525f5b80498061011d5750610153565b8281604051602001610130929190610290565b6040516020818303038152906040529250508061014c906102b1565b9050610110565b50604051631789cd6360e01b81526001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001690631789cd63906101a290859085906004016102d5565b6020604051808303815f875af11580156101be573d5f803e3d5ffd5b505050506040513d601f19601f820116820180604052508101906101e29190610316565b505050565b5f6001600160e01b031982166255674d60e11b14806100da57506301ffc9a760e01b6001600160e01b03198316146100da565b5f6020828403121561022a575f80fd5b81356001600160e01b031981168114610241575f80fd5b9392505050565b5f60208284031215610258575f80fd5b81356001600160a01b0381168114610241575f80fd5b5f5b83811015610288578181015183820152602001610270565b50505f910152565b5f83516102a181846020880161026e565b9190910191825250602001919050565b5f600182016102ce57634e487b7160e01b5f52601160045260245ffd5b5060010190565b60018060a01b0383168152604060208201525f825180604084015261030181606085016020870161026e565b601f01601f1916919091016060019392505050565b5f60208284031215610326575f80fd5b505191905056fea26469706673582212202d7a812279500d5b11cfc987766df70eb42b1c15ccb20425f20b81e0e23dc34e64736f6c63430008180033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "constructor": {
+        "params": {
+          "inputBox": "The input box used by the portal"
+        }
+      },
+      "getInputBox()": {
+        "returns": {
+          "_0": "The input box"
+        }
+      },
+      "sendVersionedBlobHashes(address)": {
+        "details": "The input format is the following: message sender address (20 bytes), followed by `n` versioned blob hashes (32 bytes each), in the same order as they appear in the transaction.",
+        "params": {
+          "appContract": "The application contract address"
+        }
+      },
+      "supportsInterface(bytes4)": {
+        "details": "Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas."
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "constructor": {
+        "notice": "Constructs the portal."
+      },
+      "getInputBox()": {
+        "notice": "Get the input box used by this portal."
+      },
+      "sendVersionedBlobHashes(address)": {
+        "notice": "Adds an input with the versioned hashes of all the blobs contained in the current transaction, obtained via the `BLOBHASH` opcode (introduced by EIP-4844)."
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}
