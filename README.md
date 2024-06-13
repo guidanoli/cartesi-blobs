@@ -172,6 +172,11 @@ For testing purposes, you can set the `APPLICATION_CONTRACT` environment variabl
     --rpc-url "$RPC_URL"
 ```
 
+> [!NOTE]
+> We believe it would be possible to have a functioning local setup, but it would require an Ethereum consensus client
+> like Prysm or Lighthouse running locally. Also, this would require modifications in the NoNodo patch that handles GIO
+> requests with domain 4844, because we would need to communicate with the CL node through the Beacon API.
+
 ## References
 
 ### EIP-4844
