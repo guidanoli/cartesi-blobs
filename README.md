@@ -19,12 +19,12 @@ Once the the transaction is signed, submitted, and included in a finalized Ether
 During the execution of the transaction, the following happens.
 First, the target address is triggered, in this case the `VersionedBlobHashRelay` contract.
 This contract builds an input with the message sender and the versioned hash of all the blobs of the current transaction.
-It's important to mention that each Ethereum can contain up to 6 blobs, and it is possible to send more than one blob in the same transaction.
+It's important to mention that each Ethereum block can contain up to 6 blobs, and it is possible to send more than one blob in the same transaction.
 With the input it has just built, the relay contract sends it to the `InputBox` contract, where it will be emitted in an `InputAdded` event.
 
 This input will take the usual journey from the blockchain to the Cartesi machine.
 For every finalized Ethereum block, the Cartesi node will check for `InputAdded` events emitted by the `InputBox` contract.
-It then adds such inputs to a database, to be read an internal service responsible for running the Cartesi machine.
+It then adds such inputs to a database, to be read by an internal service responsible for running the Cartesi machine.
 Once the machine requests the next input, this service will read it from the database, write it to a so-called `rx` buffer, and resume its execution.
 
 Inside the Cartesi machine, this `rx` buffer is read and served to the application back-end through an HTTP API.
@@ -103,7 +103,7 @@ In such cases, the node runner could switch to the safe option, which is to run 
 > For production-level implementations, we highly advise verifying blobs against the KZG proof, commitment, and versioned blob hash.
 
 It's also worth noting that the application developer and node runner must agree on the set of valid blobs.
-They could agree on a fixed set of known blobs, or on a dynamic set of blobs (like those relayed the `VersionedBlobHashRelay` contract).
+They could agree on a fixed set of known blobs, or on a dynamic set of blobs (like those relayed by the `VersionedBlobHashRelay` contract).
 They could also agree on the set of all blobs in the network (that have not expired yet).
 On the extreme case, they could even agree on a set of blobs from multiple networks.
 
@@ -113,9 +113,10 @@ On the extreme case, they could even agree on a set of blobs from multiple netwo
 > Such parameter could work as a hint to the node runner, and be totally ignored by arbitration.
 
 If the node runner is not able to obtain the requested blob from the set of valid blobs, then the application is broken.
-Otherwise, the node runner was able to obtain the blob, and proceeds to write it to the `rx` buffer and resumes the machine.
+Otherwise, the node runner is able to obtain the blob, writes it to the `rx` buffer and resumes the machine.
 The HTTP server then reads the GIO response from the `rx` buffer, and forwards it to the application back-end.
-And that's the end of the pipeline. Now, the application can do whatever it wants with the blob.
+
+And that's the end of the pipeline! Now, the application can do whatever it wants with the blob. 🫧
 
 ```mermaid
 flowchart TB
