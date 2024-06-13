@@ -67,7 +67,7 @@ Such conversion is possible thanks to the GIO feature that has been recently inc
 
 > [!IMPORTANT]
 > As of this writing (June 2024), the Cartesi node doesn't yet support the GIO feature.
-> So, for demonstration purposes, we've used [Nonodo](https://github.com/Calindra/nonodo) instead.
+> So, for demonstration purposes, we've used NoNodo instead.
 
 Everything starts with the application back-end sending a GIO request to the HTTP server running inside the Cartesi machine.
 The HTTP request body of any GIO request is a JSON containing a domain and an ID.
@@ -86,7 +86,7 @@ If the Cartesi node is properly configured, it will know how to handle a GIO req
 
 > [!NOTE]
 > In the reference implementation of the Cartesi node, it is not yet defined how GIO request will be configured by the node runner.
-> In our demo, we've hard-coded the handling of GIO requests with domain 4844 into the Nonodo development node.
+> In our demo, we've hard-coded the handling of GIO requests with domain 4844 into the NoNodo development node.
 
 Now, here comes a great question: how to obtain a blob from its versioned hash?
 It's clear that we cannot brute force this operation, because there is a robust cryptographic hash function at play, namely SHA-256.
@@ -161,3 +161,12 @@ flowchart TB
 
 - [Blobscan (Sepolia)](https://sepolia.blobscan.com/)
 - [Blobscan API (Sepolia)](https://api.sepolia.blobscan.com/)
+
+### Convenience & Tooling
+
+- [NoNodo (Development node)](https://github.com/Calindra/nonodo)
+
+### Cartesi SDK
+
+- [Machine Emulator Tools v0.15.0](https://github.com/cartesi/machine-emulator-tools/tree/v0.15.0)
+- [Cartesi gRPC Interfaces v0.16.0](https://github.com/cartesi/grpc-interfaces/tree/v0.16.0)
