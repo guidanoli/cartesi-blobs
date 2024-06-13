@@ -17,10 +17,10 @@ This transaction carries the user input in the form of a blob, instead of in the
 Once the the transaction is signed, submitted, and included in a finalized Ethereum block, some stuff happens on-chain.
 
 During the execution of the transaction, the following happens.
-First, the target address is triggered, in this case the `VersionedBlobHashRelay` contract.
+First, the target address is triggered, in this case the `VersionedBlobHashPortal` contract.
 This contract builds an input with the message sender and the versioned hash of all the blobs of the current transaction.
 It's important to mention that each Ethereum block can contain up to 6 blobs, and it is possible to send more than one blob in the same transaction.
-With the input it has just built, the relay contract sends it to the `InputBox` contract, where it will be emitted in an `InputAdded` event.
+With the input it has just built, the portal contract sends it to the `InputBox` contract, where it will be emitted in an `InputAdded` event.
 
 This input will take the usual journey from the blockchain to the Cartesi machine.
 For every finalized Ethereum block, the Cartesi node will check for `InputAdded` events emitted by the `InputBox` contract.
@@ -34,7 +34,7 @@ This server also decodes the input into a meaningful structure that also contain
 flowchart TB
 
     subgraph Ethereum
-        VersionedBlobHashRelay
+        VersionedBlobHashPortal
         InputBox
     end
 
@@ -52,8 +52,8 @@ flowchart TB
     end
 
     AppFrontend -- suggests tx w/ blob(s) --> Wallet
-    Wallet -- submits tx w/ blob(s) --> VersionedBlobHashRelay
-    VersionedBlobHashRelay -- adds input w/ blob hash(es) --> InputBox
+    Wallet -- submits tx w/ blob(s) --> VersionedBlobHashPortal
+    VersionedBlobHashPortal -- adds input w/ blob hash(es) --> InputBox
     InputBox -- reads input from event --> CartesiNode
     CartesiNode -- writes input to --> rxBuffer
     rxBuffer -- provides input to --> HTTPAPI
@@ -103,7 +103,7 @@ In such cases, the node runner could switch to the safe option, which is to run 
 > For production-level implementations, we highly advise verifying blobs against the KZG proof, commitment, and versioned blob hash.
 
 It's also worth noting that the application developer and node runner must agree on the set of valid blobs.
-They could agree on a fixed set of known blobs, or on a dynamic set of blobs (like those relayed by the `VersionedBlobHashRelay` contract).
+They could agree on a fixed set of known blobs, or on a dynamic set of blobs (like those sent by the `VersionedBlobHashPortal` contract).
 They could also agree on the set of all blobs in the network (that have not expired yet).
 On the extreme case, they could even agree on a set of blobs from multiple networks.
 

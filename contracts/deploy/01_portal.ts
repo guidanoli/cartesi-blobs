@@ -20,11 +20,11 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 
     const { InputBox } = await deployments.all();
 
-    await deployments.deploy("VersionedBlobHashRelay", {
+    await deployments.deploy("VersionedBlobHashPortal", {
         ...opts,
         args: [InputBox.address],
     });
 };
 
 export default func;
-func.tags = ["VersionedBlobHashRelay"];
+func.tags = ["Portal"];

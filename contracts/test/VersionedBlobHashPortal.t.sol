@@ -6,7 +6,7 @@ import {Test} from "forge-std/Test.sol";
 
 import {IInputBox} from "@cartesi/rollups/contracts/inputs/IInputBox.sol";
 
-import {VersionedBlobHashRelay} from "src/VersionedBlobHashRelay.sol";
+import {VersionedBlobHashPortal} from "src/VersionedBlobHashPortal.sol";
 
 contract TestWrapper is Test {
     uint256 private _addrCount;
@@ -16,24 +16,24 @@ contract TestWrapper is Test {
     }
 }
 
-contract VersionedBlobHashRelayTest is TestWrapper {
+contract VersionedBlobHashPortalTest is TestWrapper {
     address _alice;
     IInputBox _inputBox;
     address _appContract;
-    VersionedBlobHashRelay _relay;
+    VersionedBlobHashPortal _portal;
 
     function setUp() external {
         _alice = _newAddr();
         _inputBox = IInputBox(_newAddr());
         _appContract = _newAddr();
-        _relay = new VersionedBlobHashRelay(_inputBox);
+        _portal = new VersionedBlobHashPortal(_inputBox);
     }
 
     function testGetInputBox() external view {
-        assertEq(address(_relay.getInputBox()), address(_inputBox));
+        assertEq(address(_portal.getInputBox()), address(_inputBox));
     }
 
-    function testRelayZero() external {
+    function testSendZeroBlobs() external {
         bytes32[] memory versionedBlobHashes = new bytes32[](0);
         bytes memory input = _encodeInput(versionedBlobHashes);
         bytes memory addInputCall = _encodeAddInputCall(input);
@@ -43,10 +43,10 @@ contract VersionedBlobHashRelayTest is TestWrapper {
         vm.expectCall(address(_inputBox), addInputCall, 1);
 
         vm.prank(_alice);
-        _relay.relayVersionedBlobHashes(_appContract);
+        _portal.sendVersionedBlobHashes(_appContract);
     }
 
-    function testRelayOne(bytes32 versionedBlobHash) external {
+    function testSendOneBlob(bytes32 versionedBlobHash) external {
         vm.assume(versionedBlobHash != bytes32(0));
 
         bytes32[] memory versionedBlobHashes = new bytes32[](1);
@@ -62,10 +62,10 @@ contract VersionedBlobHashRelayTest is TestWrapper {
         vm.expectCall(address(_inputBox), addInputCall, 1);
 
         vm.prank(_alice);
-        _relay.relayVersionedBlobHashes(_appContract);
+        _portal.sendVersionedBlobHashes(_appContract);
     }
 
-    function testRelayTwo(bytes32 a, bytes32 b) external {
+    function testSendTwoBlobs(bytes32 a, bytes32 b) external {
         vm.assume(a != bytes32(0));
         vm.assume(b != bytes32(0));
 
@@ -83,7 +83,7 @@ contract VersionedBlobHashRelayTest is TestWrapper {
         vm.expectCall(address(_inputBox), addInputCall, 1);
 
         vm.prank(_alice);
-        _relay.relayVersionedBlobHashes(_appContract);
+        _portal.sendVersionedBlobHashes(_appContract);
     }
 
     function _encodeInput(
