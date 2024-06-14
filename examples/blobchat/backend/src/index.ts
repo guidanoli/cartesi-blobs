@@ -1,6 +1,15 @@
 import createClient from "openapi-fetch";
 import { components, paths } from "./schema";
-import { Address, Hex, slice, size, isAddressEqual, Hash } from "viem";
+import {
+    Address,
+    Hex,
+    slice,
+    size,
+    isAddressEqual,
+    Hash,
+    fromBlobs,
+    stringToHex,
+} from "viem";
 
 type PostMethod = ReturnType<typeof createClient<paths>>["POST"];
 type AdvanceRequestData = components["schemas"]["Advance"];
@@ -19,6 +28,14 @@ const VERSIONED_BLOB_HASH_PORTAL: Address =
 
 const rollupServer = process.env.ROLLUP_HTTP_SERVER_URL;
 console.log("HTTP rollup_server url is " + rollupServer);
+
+interface Message {
+    data: Hex;
+    sender: Address;
+    blockTimestamp: number;
+}
+
+const messages: Message[] = [];
 
 // Uses continuation-passing style
 const split = <T>(
@@ -58,8 +75,27 @@ const toBlob = async (versionedBlobHash: Hash, POST: PostMethod) => {
     }
 };
 
+const emitReportWithMessages = async (POST: PostMethod) => {
+    const { response } = await POST("/report", {
+        body: {
+            payload: stringToHex(JSON.stringify(messages)),
+        },
+        parseAs: "text",
+    });
+
+    if (response.status >= 200 && response.status < 300) {
+        return true;
+    } else {
+        const data = await response.text();
+        console.log(
+            `HTTP request for emitting report failed with status ${response.status}: ${data}`,
+        );
+        return false;
+    }
+};
+
 const handleAdvanceFromVersionedBlobHashPortal: AdvanceRequestHandler = async (
-    { payload },
+    { payload, metadata: { block_timestamp: blockTimestamp } },
     POST,
 ) => {
     const [sender, versionedBlobHashes] = split(
@@ -88,6 +124,22 @@ const handleAdvanceFromVersionedBlobHashPortal: AdvanceRequestHandler = async (
         blobs.push(blob);
     }
 
+    const data = fromBlobs({ blobs });
+
+    const message: Message = {
+        data,
+        sender,
+        blockTimestamp,
+    };
+
+    messages.push(message);
+
+    const emitted = await emitReportWithMessages(POST);
+
+    if (!emitted) {
+        return "reject";
+    }
+
     return "accept";
 };
 
@@ -95,8 +147,10 @@ const handleAdvance: AdvanceRequestHandler = async (data, POST) => {
     console.log("Received advance request data " + JSON.stringify(data));
     if (isAddressEqual(data.metadata.msg_sender, VERSIONED_BLOB_HASH_PORTAL)) {
         return handleAdvanceFromVersionedBlobHashPortal(data, POST);
+    } else {
+        console.log("Unauthorized sender");
+        return "reject";
     }
-    return "accept";
 };
 
 const handleInspect: InspectRequestHandler = async (data) => {
