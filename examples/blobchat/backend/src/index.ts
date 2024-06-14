@@ -1,6 +1,6 @@
 import createClient from "openapi-fetch";
 import { components, paths } from "./schema";
-import { Address, Hex, slice, size, isAddressEqual } from "viem";
+import { Address, Hex, slice, size, isAddressEqual, Hash } from "viem";
 
 type PostMethod = ReturnType<typeof createClient<paths>>["POST"];
 type AdvanceRequestData = components["schemas"]["Advance"];
@@ -29,6 +29,35 @@ const split = <T>(
     return k(slice(hex, 0, at), at < size(hex) ? slice(hex, at) : "0x");
 };
 
+const toBlob = async (versionedBlobHash: Hash, POST: PostMethod) => {
+    console.log(
+        `Sending GIO request for blob with versioned hash ${versionedBlobHash}`,
+    );
+    const { response } = await POST("/gio", {
+        body: {
+            domain: 4844,
+            id: versionedBlobHash,
+        },
+        parseAs: "text",
+    });
+
+    if (response.status == 200) {
+        const data = (await response.json()) as GioResponse;
+        if (data.code == 42) {
+            return data.data;
+        } else {
+            console.log(
+                `GIO request for blob failed with code ${data.code}: ${data.data}`,
+            );
+        }
+    } else {
+        const data = await response.text();
+        console.log(
+            `HTTP request for blob failed with status ${response.status}: ${data}`,
+        );
+    }
+};
+
 const handleAdvanceFromVersionedBlobHashPortal: AdvanceRequestHandler = async (
     { payload },
     POST,
@@ -37,7 +66,7 @@ const handleAdvanceFromVersionedBlobHashPortal: AdvanceRequestHandler = async (
         payload,
         20,
         (sender, payload) => {
-            const versionedBlobHashes: Hex[] = [];
+            const versionedBlobHashes: Hash[] = [];
             while (size(payload) > 0) {
                 payload = split(payload, 32, (versionedBlobHash, payload) => {
                     versionedBlobHashes.push(versionedBlobHash);
@@ -47,36 +76,18 @@ const handleAdvanceFromVersionedBlobHashPortal: AdvanceRequestHandler = async (
             return [sender, versionedBlobHashes];
         },
     );
-    console.log(`Received ${versionedBlobHashes.length} blobs from ${sender}:`);
-    for (const versionedBlobHash of versionedBlobHashes) {
-        console.log(`Retrieving blob from versioned hash ${versionedBlobHash}`);
-        const { response } = await POST("/gio", {
-            body: {
-                domain: 4844,
-                id: versionedBlobHash,
-            },
-            parseAs: "text",
-        });
 
-        if (response.status == 200) {
-            const data = (await response.json()) as GioResponse;
-            if (data.code == 42) {
-                const blob = data.data;
-                console.log(`Blob retrieved: ${blob}`);
-            } else {
-                console.log(
-                    `GIO request failed with code ${data.code}: ${data.data}`,
-                );
-                return "reject";
-            }
-        } else {
-            const data = await response.text();
-            console.log(
-                `HTTP request failed with status ${response.status}: ${data}`,
-            );
+    console.log(`Received ${versionedBlobHashes.length} blobs from ${sender}:`);
+
+    const blobs: Hash[] = [];
+    for (const versionedBlobHash of versionedBlobHashes) {
+        const blob = await toBlob(versionedBlobHash, POST);
+        if (blob === undefined) {
             return "reject";
         }
+        blobs.push(blob);
     }
+
     return "accept";
 };
 
