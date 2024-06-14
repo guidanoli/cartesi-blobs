@@ -1,6 +1,6 @@
 import createClient from "openapi-fetch";
 import { components, paths } from "./schema";
-import { Address, Hex, slice, size } from "viem";
+import { Address, Hex, slice, size, isAddressEqual } from "viem";
 
 type AdvanceRequestData = components["schemas"]["Advance"];
 type InspectRequestData = components["schemas"]["Inspect"];
@@ -12,14 +12,14 @@ type AdvanceRequestHandler = (
 ) => Promise<RequestHandlerResult>;
 
 const VERSIONED_BLOB_HASH_PORTAL: Address =
-    "0xab7528bb862fb57e8a2bcd567a2e929a0be56a5e";
+    "0x03CBe3B3A870CCFBDb810DC790C1634037b8Cb82";
 
 const rollupServer = process.env.ROLLUP_HTTP_SERVER_URL;
 console.log("HTTP rollup_server url is " + rollupServer);
 
 // Uses continuation-passing style
 const split = <T>(hex: Hex, at: number, k: (before: Hex, after: Hex) => T): T => {
-    return k(slice(hex, 0, at), slice(hex, at));
+    return k(slice(hex, 0, at), at < size(hex) ? slice(hex, at) : "0x");
 }
 
 const handleAdvanceFromVersionedBlobHashPortal: AdvanceRequestHandler = async ({ payload }) => {
@@ -43,10 +43,10 @@ const handleAdvanceFromVersionedBlobHashPortal: AdvanceRequestHandler = async ({
 }
 
 const handleAdvance: AdvanceRequestHandler = async (data) => {
-    if (data.metadata.msg_sender == VERSIONED_BLOB_HASH_PORTAL) {
+    console.log("Received advance request data " + JSON.stringify(data));
+    if (isAddressEqual(data.metadata.msg_sender, VERSIONED_BLOB_HASH_PORTAL)) {
         return handleAdvanceFromVersionedBlobHashPortal(data);
     }
-    console.log("Received advance request data " + JSON.stringify(data));
     return "accept";
 };
 
