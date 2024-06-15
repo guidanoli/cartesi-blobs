@@ -28,7 +28,7 @@ sendCommand
     .action(async (options) => {
         const { appContract, message } = options;
         const hash = await send(appContract, message);
-        console.log(hash);
+        console.log(`Transaction hash: ${hash}`);
     });
 
 program.parse();
