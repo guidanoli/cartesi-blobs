@@ -25,6 +25,7 @@
         "format": "prettier --check . --write"
     },
     "devDependencies": {
+        "@commander-js/extra-typings": "^12.1.0",
         "@types/node": "^20.14.2",
         "prettier": "^3.3.1",
         "ts-node": "^10.9.2",
@@ -32,6 +33,7 @@
         "viem": "latest"
     },
     "dependencies": {
-        "c-kzg": "4.0.0-alpha.1"
+        "c-kzg": "4.0.0-alpha.1",
+        "commander": "^12.1.0"
     }
 }
