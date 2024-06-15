@@ -1,9 +1,17 @@
-import { parseGwei, stringToHex, toBlobs, Address } from "viem";
+import { stringToHex, toBlobs, Address } from "viem";
 import { client } from "./client";
 import { kzg } from "./kzg";
 import { versionedBlobHashPortal } from "./contracts";
 
-export const send = async (appContract: Address, message: string) => {
+interface SendOptions {
+    message: string;
+    appContract: Address;
+    maxFeePerBlobGas: bigint;
+}
+
+export const send = async (options: SendOptions) => {
+    const { message, appContract, maxFeePerBlobGas } = options;
+
     const { abi, address } = versionedBlobHashPortal;
 
     const blobs = toBlobs({ data: stringToHex(message) });
@@ -15,7 +23,7 @@ export const send = async (appContract: Address, message: string) => {
         args: [appContract],
         blobs,
         kzg,
-        maxFeePerBlobGas: parseGwei("30"),
+        maxFeePerBlobGas,
     });
 
     return hash;

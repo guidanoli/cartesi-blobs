@@ -11,6 +11,18 @@ const parseAddress = (value: string): Address => {
     }
 };
 
+const parseBigInt = (value: string): bigint => {
+    try {
+        return BigInt(value);
+    } catch (e) {
+        if (e instanceof SyntaxError) {
+            throw new InvalidArgumentError(`Not an integer: ${value}`);
+        } else {
+            throw e;
+        }
+    }
+};
+
 const program = new Command();
 
 program.name("blobchat-cli").version("0.0.0").description("Blobchat CLI");
@@ -25,9 +37,13 @@ sendCommand
         "the application contract address",
         parseAddress,
     )
+    .requiredOption(
+        "--max-fee-per-blob-gas <bigint>",
+        "Maximum total fee per gas sender is willing to pay for blob gas (in Wei)",
+        parseBigInt,
+    )
     .action(async (options) => {
-        const { appContract, message } = options;
-        const hash = await send(appContract, message);
+        const hash = await send(options);
         console.log(`Transaction hash: ${hash}`);
     });
 
