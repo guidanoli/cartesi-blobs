@@ -1,0 +1,34 @@
+{
+    "name": "@guidanoli/blobchat-ts-cli-frontend",
+    "version": "0.0.0",
+    "description": "CLI frontend for BlobChat",
+    "keywords": [
+        "cartesi",
+        "eip-4844",
+        "blobs",
+        "cli"
+    ],
+    "homepage": "https://github.com/guidanoli/cartesi-blobs",
+    "bugs": {
+        "url": "https://github.com/guidanoli/cartesi-blobs/issues"
+    },
+    "license": "GPL-v3-only",
+    "author": {
+        "name": "Guilherme Dantas",
+        "e-mail": "guidanoli@proton.me",
+        "url": "https://github.com/guidanoli"
+    },
+    "files": [
+        "src"
+    ],
+    "scripts": {
+        "format": "prettier --check . --write"
+    },
+    "devDependencies": {
+        "@types/node": "^20.14.2",
+        "prettier": "^3.3.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.4.5",
+        "viem": "^2.13.7"
+    }
+}
