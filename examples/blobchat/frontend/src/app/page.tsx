@@ -41,9 +41,8 @@ function MessageComponent({ message }: MessageComponentProps): ReactNode {
     return (
         <p>
             <span style={{ color: addressToColor(message.sender) }}>
-                {message.sender}
+                <code>{message.sender}: </code>
             </span>
-            {": "}
             {body}{" "}
             <span title={date.toLocaleString()} style={{ color: "#757575" }}>
                 ({formatDistanceToNowStrict(date)} ago)
