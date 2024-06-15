@@ -29,6 +29,9 @@
         "prettier": "^3.3.1",
         "ts-node": "^10.9.2",
         "typescript": "^5.4.5",
-        "viem": "^2.13.7"
+        "viem": "latest"
+    },
+    "dependencies": {
+        "c-kzg": "4.0.0-alpha.1"
     }
 }
