@@ -1,7 +1,7 @@
 {
     "name": "@guidanoli/blobchat-frontend",
     "private": true,
-    "description": "React frontend for BlobChat",
+    "description": "React frontend for Blobchat",
     "keywords": [
         "cartesi",
         "eip-4844",

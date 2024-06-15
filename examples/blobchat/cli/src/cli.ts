@@ -13,7 +13,7 @@ const parseAddress = (value: string): Address => {
 
 const program = new Command();
 
-program.name("blobchat-cli").version("0.0.0").description("BlobChat CLI");
+program.name("blobchat-cli").version("0.0.0").description("Blobchat CLI");
 
 const sendCommand = program.command("send");
 

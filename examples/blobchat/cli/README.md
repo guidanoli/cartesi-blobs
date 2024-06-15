@@ -1,6 +1,6 @@
-# BlobChat TypeScript CLI Front-end
+# Blobchat CLI
 
-This CLI was created to interact with BlobChat.
+This CLI was created to interact with Blobchat.
 It uses `viem` to sign EIP-4844 transactions.
 
 ## Setup

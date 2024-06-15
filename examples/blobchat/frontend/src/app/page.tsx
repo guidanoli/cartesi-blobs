@@ -62,7 +62,7 @@ function App(): ReactNode {
     const readerResult = useLatestAppState();
     return (
         <div>
-            <h1>BlobChat 🫧 💬</h1>
+            <h1>Blobchat 🫧 💬</h1>
             <ReaderResultComponent
                 readerResult={readerResult}
                 responseComponent={AppStateComponent}

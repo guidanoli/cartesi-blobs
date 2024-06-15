@@ -1,7 +1,7 @@
 {
-    "name": "@guidanoli/blobchat-ts-cli-frontend",
+    "name": "@guidanoli/blobchat-cli",
     "private": true,
-    "description": "CLI frontend for BlobChat",
+    "description": "CLI frontend for Blobchat",
     "keywords": [
         "cartesi",
         "eip-4844",
