@@ -1,0 +1,44 @@
+{
+    "name": "@guidanoli/blobchat-frontend",
+    "private": true,
+    "description": "React frontend for BlobChat",
+    "keywords": [
+        "cartesi",
+        "eip-4844",
+        "blobs",
+        "react"
+    ],
+    "scripts": {
+        "dev": "pnpm codegen && next dev",
+        "build": "pnpm codegen && next build",
+        "format": "prettier --check . --write",
+        "codegen": "graphql-codegen",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@apollo/client": "^3.10.5",
+        "@graphql-codegen/cli": "^5.0.2",
+        "@graphql-codegen/client-preset": "^4.3.0",
+        "@graphql-typed-document-node/core": "^3.2.0",
+        "date-fns": "^3.6.0",
+        "graphql": "^16.8.2",
+        "next": "13.5.3",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "viem": "latest"
+    },
+    "devDependencies": {
+        "@types/node": "^20.7.2",
+        "@types/react": "^18.2.23",
+        "@types/react-dom": "^18.2.8",
+        "bufferutil": "^4.0.7",
+        "encoding": "^0.1.13",
+        "lokijs": "^1.5.12",
+        "pino-pretty": "^10.2.0",
+        "prettier": "^3.3.2",
+        "supports-color": "^9.4.0",
+        "typescript": "^5.2.2",
+        "utf-8-validate": "^6.0.3"
+    }
+}
