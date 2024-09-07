@@ -34,5 +34,5 @@ export const account = getAccount();
 export const client = createWalletClient({
     account,
     chain: sepolia,
-    transport: http(),
+    transport: http(process.env.RPC_URL),
 });
